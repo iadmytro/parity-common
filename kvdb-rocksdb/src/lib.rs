@@ -336,7 +336,9 @@ impl Database {
 	pub fn open<P: AsRef<Path>>(config: &DatabaseConfig, path: P) -> io::Result<Database> {
 		assert!(config.columns > 0, "the number of columns must not be zero");
 
-		let opts = generate_options(config);
+		let mut opts = generate_options(config);
+		opts.set_max_total_wal_size(104857600); // 100MiB
+		opts.set_wal_ttl_seconds(30);
 		let block_opts = generate_block_based_options(config)?;
 
 		let column_names: Vec<_> = (0..config.columns).map(|c| format!("col{}", c)).collect();
