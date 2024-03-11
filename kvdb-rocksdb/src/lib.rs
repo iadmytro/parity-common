@@ -288,9 +288,12 @@ fn generate_options(config: &DatabaseConfig) -> Options {
 	opts.set_bytes_per_sync(1 * MB as u64);
 	opts.set_keep_log_file_num(1);
 	opts.increase_parallelism(cmp::max(1, num_cpus::get() as i32 / 2));
-	if let Some(m) = config.max_total_wal_size {
-		opts.set_max_total_wal_size(m);
-	}
+	// if let Some(m) = config.max_total_wal_size {
+	// 	opts.set_max_total_wal_size(m);
+	// }
+
+	opts.set_max_total_wal_size(104857600); // 100MiB
+	opts.set_wal_ttl_seconds(30);
 
 	opts
 }
